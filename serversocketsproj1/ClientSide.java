@@ -21,7 +21,7 @@ public class ClientSide {
 	TextField t1;
 	Button b1;
 	String name;
-	TextArea ta;
+	TextArea ta, ta1;
 	TextField t2;
 	Button b2;
 
@@ -80,18 +80,22 @@ public class ClientSide {
 		Frame f = new Frame("chat application");
 		ta = new TextArea();
 		ta.setBounds(20, 50, 300, 300);
-
 		l1 = new Label("Enter the msg:");
 		l1.setBounds(20, 370, 100, 20);
 		t2 = new TextField();
 		t2.setBounds(140, 370, 100, 20);
 		b2 = new Button("Send");
 		b2.setBounds(100, 400, 50, 30);
+		ta1 = new TextArea();
+		ta1.setText("connected clients are:\n");
+		ta1.setBounds(350, 50, 140, 300);
+
 		f.add(ta);
 		f.add(l1);
 		f.add(t2);
 		f.add(b2);
-		f.setSize(400, 500);
+		f.add(ta1);
+		f.setSize(500, 500);
 		f.setLayout(null);
 		f.setVisible(true);
 		f.addWindowListener(new WindowAdapter() {
@@ -118,7 +122,19 @@ public class ClientSide {
 			String serverResponse;
 			try {
 				while ((serverResponse = in.readLine()) != null) {
-					ta.append(serverResponse + "\n");
+					if (serverResponse.charAt(serverResponse.length() - 1) == '1') {
+						ta1.setText("");
+						ta1.setText("connected clients are:\n");
+						serverResponse = serverResponse.substring(1, serverResponse.length() - 2);
+						String[] parts = serverResponse.split(",");
+						for (String p : parts) {
+							ta1.append(p + "\n");
+						}
+						parts = null;
+
+					} else {
+						ta.append(serverResponse + "\n");
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
